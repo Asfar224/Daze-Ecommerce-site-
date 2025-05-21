@@ -6,7 +6,7 @@ export default function CartModal() {
     const cartItems = false;
 
     return (
-        <div className='w-max absolute top-12 right-0 p-4 flex flex-col gap-6 z-20 shadow-md '>
+        <div className='w-max absolute top-12 right-0 p-4 flex flex-col gap-6 z-10 bg-white shadow-md '>
             {cartItems ? (
                 "Cart is empty"
             ) : (

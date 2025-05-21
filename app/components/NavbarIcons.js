@@ -31,8 +31,8 @@ export default function NavbarIcons() {
                </div>
             )}
             <div className="relative flex w-7 h-8 "><Image src='/bell.png' alt="" fill className='cursor-pointer' /></div>
-            <div className="relative flex w-8 h-9 ">
-                <Image src='/cart.png' alt="" fill className='cursor-pointer' onClick={()=> {setiscartopen(prev=>!prev)}}/>
+            <div className="relative flex w-8 h-9 " onClick={()=> {setiscartopen(prev=>!prev)}}>
+                <Image src='/cart.png' alt="" fill className='cursor-pointer' />
                 <div className='absolute -top-2 -right-3 w-6 h-6 rounded-full bg-red-400 text-white text-sm flex items-center justify-center'>2</div>
             </div>
             {iscartopen && <CartModal/>}

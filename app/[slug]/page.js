@@ -1,6 +1,7 @@
 import React from 'react'
 import ProductImages from '../components/ProductImages'
 import CustomizeProduct from '../components/CustomizeProduct'
+import Add from '../components/Add'
 
 export default function SinglePage() {
   return (
@@ -19,6 +20,7 @@ export default function SinglePage() {
            </div>
            <div className='h-[2px] bg-gray-100'/>
            <CustomizeProduct/>
+           <Add/>
            <div className='h-[2px] bg-gray-100'/>
            <div className='text-sm'>
              <h4 className='font-medium mb-4'>Title</h4>
