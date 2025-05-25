@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Image from 'next/image'
 import Filter from '../components/Filter'
+import { WixClientServer } from '@/app/lib/WixClientServer'
 import ProductList from '../components/ProductList'
 
-export default function page() {
+
+
+const ListPage = async({searchParams}) =>{
+
+  const WixClient = await WixClientServer();
+  const cat = await WixClient.collections.getCollectionBySlug(searchParams.cat || "all-products");
+
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative' >
       <div className= ' hidden md:flex px-4 justify-between gap-50 bg-pink-100 h-64'> 
@@ -17,7 +24,11 @@ export default function page() {
       </div>
       <Filter/>
       <h1 className='mt-12 text-xl'>Shoes for you!</h1>
-      <ProductList/>
+      <Suspense>
+      <ProductList categoryId={cat.collection._id}  />
+      </Suspense>
     </div>
   )
 }
+
+export default ListPage;
