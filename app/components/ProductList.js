@@ -5,15 +5,40 @@ import { WixClientServer } from '@/app/lib/WixClientServer'
 import DOMPurify from 'isomorphic-dompurify';
 
 
-const ProductList = async({categoryId , limit}) =>{
-  const PRODUCT_PER_PAGE = 20;
+const ProductList = async({categoryId , limit , searchparmas}) =>{
+
+  const searchprms = await searchparmas;
+  const PRODUCT_PER_PAGE = limit || 20;
   const WixClient = await WixClientServer();
+   const page = parseInt(searchprms?.page || "1", 10);
+  const offset = (page - 1) * PRODUCT_PER_PAGE;
 
   if (!categoryId || categoryId.trim() === "") {
     console.warn("Invalid or missing categoryId passed to ProductList");
   }
 
-  const res = await WixClient.products.queryProducts().eq("collectionIds",categoryId).limit(limit || PRODUCT_PER_PAGE).find();
+  const productQuery =  WixClient.products.queryProducts().startsWith("name",searchprms?.name || "").
+  hasSome("productType" , [searchprms?.Type || "digital" , "physical"] ).
+  gt("priceData.price" , searchprms?.min || 0).
+  lt("priceData.price" , searchprms?.max || 99999).eq("collectionIds",categoryId).
+  limit(PRODUCT_PER_PAGE).skip(offset)
+
+  if(searchprms?.sort){
+    const [sortType , sortBy] = searchprms?.sort.split(" ");
+
+    if(sortType === "asc"){
+      productQuery.ascending(sortBy)
+    }
+    if(sortType === "desc"){
+      productQuery.descending(sortBy)
+    }
+  }
+
+  const res = await productQuery.find();
+
+  const { offset: resOffset = 0, limit: resLimit = PRODUCT_PER_PAGE, total = 0 } = res.paging || {};
+  const hasNext = resOffset + resLimit < total;
+  const hasPrev = resOffset > 0;
   
   return (
     <div className='flex mt-12 gap-x-8 gap-y-16 justify-between flex-wrap'>

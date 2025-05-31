@@ -3,13 +3,18 @@ import Image from 'next/image'
 import Filter from '../components/Filter'
 import { WixClientServer } from '@/app/lib/WixClientServer'
 import ProductList from '../components/ProductList'
+import Pagination from '../components/pagination'
 
 
 
 const ListPage = async({searchParams}) =>{
 
+
   const WixClient = await WixClientServer();
-  const cat = await WixClient.collections.getCollectionBySlug(searchParams.cat || "all-products");
+  const searchparams = await searchParams; 
+  const cat = await WixClient.collections.getCollectionBySlug(searchparams.cat || "all-products");
+
+  console.log(cat);
 
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative' >
@@ -23,10 +28,11 @@ const ListPage = async({searchParams}) =>{
          </div>
       </div>
       <Filter/>
-      <h1 className='mt-12 text-xl'>Shoes for you!</h1>
+      <h1 className='mt-12 text-xl'>{cat?.collection.name} for you!</h1>
       <Suspense>
-      <ProductList categoryId={cat.collection._id}  />
+      <ProductList categoryId={cat.collection._id}  searchparmas={searchParams} />
       </Suspense>
+      <Pagination />
     </div>
   )
 }

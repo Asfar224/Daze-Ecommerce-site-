@@ -15,7 +15,6 @@ export default async function SinglePage({ params }) {
 
    const product = products.items[0];
 
-
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative flex flex-col lg:flex-row gap-16 mt-10'>
         <div className='w-full lg:w-1/2 lg:sticky h-max top-20'>
@@ -36,10 +35,10 @@ export default async function SinglePage({ params }) {
             )}
              </div>
            <div className='h-[2px] bg-gray-100'/>
-           { product.productOptions && product.variants &&
-           <CustomizeProduct productID={product._id} productoptions={product.productOptions} productvarriant = {product.variants}/>
-           }
-           <Add/>
+           { product.productOptions && product.variants ?
+           <CustomizeProduct productID={product._id} productoptions={product.productOptions} productvarriant = {product.variants}/> :
+           <Add productID= {product._id} varriantID = {"00000000-0000-0000-000000000000"} stockNumber={product.stock?.quantity || 0}/>
+          }
            <div className='h-[2px] bg-gray-100'/>
            {product.additionalInfoSections?.map((section)=> (
              <div className='text-sm' key={section.title}>
