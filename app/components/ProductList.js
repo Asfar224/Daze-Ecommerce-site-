@@ -3,15 +3,17 @@ import React from 'react'
 import Image from 'next/image';
 import { WixClientServer } from '@/app/lib/WixClientServer'
 import DOMPurify from 'isomorphic-dompurify';
+import Pagination from './pagination';
 
 
 const ProductList = async({categoryId , limit , searchparmas}) =>{
 
   const searchprms = await searchparmas;
-  const PRODUCT_PER_PAGE = limit || 20;
+  const page = parseInt(searchprms?.page || "1");
+  const PRODUCT_PER_PAGE = limit || 8;
   const WixClient = await WixClientServer();
-   const page = parseInt(searchprms?.page || "1", 10);
-  const offset = (page - 1) * PRODUCT_PER_PAGE;
+
+  const offset = (page - 1) * PRODUCT_PER_PAGE
 
   if (!categoryId || categoryId.trim() === "") {
     console.warn("Invalid or missing categoryId passed to ProductList");
@@ -36,9 +38,14 @@ const ProductList = async({categoryId , limit , searchparmas}) =>{
 
   const res = await productQuery.find();
 
-  const { offset: resOffset = 0, limit: resLimit = PRODUCT_PER_PAGE, total = 0 } = res.paging || {};
-  const hasNext = resOffset + resLimit < total;
-  const hasPrev = resOffset > 0;
+  const total = res._totalCount;
+  const limitUsed = res._limit || PRODUCT_PER_PAGE;
+
+  const currentPage = Math.floor(offset / limitUsed) + 1;
+  const hasNext = offset + limitUsed < total;
+  const hasPrev = offset > 0;
+
+
   
   return (
     <div className='flex mt-12 gap-x-8 gap-y-16 justify-between flex-wrap'>
@@ -57,6 +64,7 @@ const ProductList = async({categoryId , limit , searchparmas}) =>{
         <button className='rounded-2xl ring-1 ring-black hover:text-white hover:bg-black px-4  py-2 w-max'>Add to cart</button>
       </Link>
       ))}
+      <Pagination currentPage={currentPage || 0} hasPrev={hasPrev} hasNext={hasNext}/>
     </div>
   )
 }

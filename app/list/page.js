@@ -14,8 +14,6 @@ const ListPage = async({searchParams}) =>{
   const searchparams = await searchParams; 
   const cat = await WixClient.collections.getCollectionBySlug(searchparams.cat || "all-products");
 
-  console.log(cat);
-
   return (
     <div className='px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative' >
       <div className= ' hidden md:flex px-4 justify-between gap-50 bg-pink-100 h-64'> 
@@ -32,7 +30,6 @@ const ListPage = async({searchParams}) =>{
       <Suspense>
       <ProductList categoryId={cat.collection._id}  searchparmas={searchParams} />
       </Suspense>
-      <Pagination />
     </div>
   )
 }

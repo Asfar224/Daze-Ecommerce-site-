@@ -26,7 +26,8 @@ export default function Add({productID , varriantID , stockNumber}) {
                         {quantity}
                         <button className='cursor-pointer text-xl' onClick={()=>handleQuantity("i")}>+</button>
                     </div>
-                    <div className='text-xs'>Only <span className='text-orange-500'>{stockNumber} items</span> left! <br /> {"Dont"} miss it</div>
+                    {stockNumber < 1 ? <div className='text-xs'>Product is not in the stock</div> :
+                    <div className='text-xs'>Only <span className='text-orange-500'>{stockNumber} items</span> left! <br /> {"Dont"} miss it</div>}
                 </div>
             <button className='ring-1 rounded-3xl ring-pink-500 text-pink-500 hover:text-white hover:bg-pink-500 text-sm px-2 py-3 w-36 disabled:bg-pink-200 disabled:cursor-not-allowed disabled:text-white '>Add to cart</button>
             </div>
